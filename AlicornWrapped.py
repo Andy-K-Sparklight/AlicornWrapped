@@ -3,17 +3,38 @@ import sys
 import requests
 import zipfile
 import getpass
+import time
 
-# Alicorn Wrapper for Windows
-# This URL is hard coded and should always stay there, while we can change on GitHub
 al_Origin = "https://endpoint.fastgit.org/https://github.com/Andy-K-Sparklight/AlicornBinaries/releases/download/latest/Alicorn-win32-x64.zip"
-home = "C:\\Users\\" + getpass.getuser() # Build home dir
+home = "C:\\Users\\" + getpass.getuser()
 
-al_Root = home + "\Alicorn-win32-x64" # Specified name
-al_Compressed = home + "\AlicornBinary.zip" # Download Temp
-al_Executable =  al_Root + "\Alicorn.exe" # Alicorn Executable
+al_Root = home + "\Alicorn-win32-x64"
+al_Compressed = home + "\AlicornBinary.zip"
+al_Executable =  al_Root + "\Alicorn.exe"
 
-# UnZip
+def downloadFile(name, url):
+    headers = {'Proxy-Connection':'keep-alive'}
+    r = requests.get(url, stream=True, headers=headers)
+    length = float(r.headers['content-length'])
+    f = open(name, 'wb')
+    count = 0
+    count_tmp = 0
+    time1 = time.time()
+    for chunk in r.iter_content(chunk_size = 512):
+        if chunk:
+            f.write(chunk)
+            count += len(chunk)
+            if time.time() - time1 > 2:
+                p = count / length * 100
+                speed = (count - count_tmp) / 1024 / 1024 / 2
+                count_tmp = count
+                print(name + ': ' + formatFloat(p) + '%' + ' Speed: ' + formatFloat(speed) + 'MiB/s')
+                time1 = time.time()
+    f.close()
+    
+def formatFloat(num):
+    return '{:.2f}'.format(num)
+
 def un_zip(f):
     z = zipfile.ZipFile(f)
     if os.path.isdir(al_Root):
@@ -24,28 +45,22 @@ def un_zip(f):
         z.extract(names, home + "\\")
     z.close()
 
-# Run if exists
 if os.access(al_Executable, os.X_OK):
     print("Alicorn Found! Starting...")
     os.system("cd " + al_Root + " && start /B Alicorn.exe")
     sys.exit(0)
 
-# Download and unpack
 else:
     print("Please wait... This may take up to 1 minute.")
-    f = requests.get(al_Origin)
-    with open(al_Compressed, "wb") as d:
-        d.write(f.content)
+    print("If it's too slow you can press <Ctrl-C> to stop and try again.")
+    downloadFile(al_Compressed, al_Origin)
     print("Unpacking objects...")
     un_zip(al_Compressed)
-
-# Can run?
 if os.access(al_Executable, os.X_OK):
     print("Alicorn Found! Starting...")
     os.system("cd " + al_Root + " && start /B Alicorn.exe")
     sys.exit(0)
 else:
-    # If no execute permission or not exist
     print("Failed to launch Alicorn! Press Enter to continue...")
     input()
     sys.exit(1)
