@@ -8,9 +8,9 @@ import time
 al_Origin = "https://endpoint.fastgit.org/https://github.com/Andy-K-Sparklight/AlicornBinaries/releases/download/latest/Alicorn-win32-x64.zip"
 home = "C:\\Users\\" + getpass.getuser()
 
-al_Root = home + "\Alicorn-win32-x64"
-al_Compressed = home + "\AlicornBinary.zip"
-al_Executable =  al_Root + "\Alicorn.exe"
+al_Root = home + "\\Alicorn-win32-x64"
+al_Compressed = home + "\\AlicornBinary.zip"
+al_Executable =  al_Root + "\\Alicorn.exe"
 
 def downloadFile(name, url):
     headers = {'Proxy-Connection':'keep-alive'}
