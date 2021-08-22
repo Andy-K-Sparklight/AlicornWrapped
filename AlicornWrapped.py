@@ -5,7 +5,7 @@ import zipfile
 import getpass
 import time
 
-al_Origin = "https://endpoint.fastgit.org/https://github.com/Andy-K-Sparklight/AlicornBinaries/releases/download/latest/Alicorn-win32-x64.zip"
+al_Origin = "https://alicorn-go.vercel.app/latest-win32-release"
 home = "C:\\Users\\" + getpass.getuser()
 
 al_Root = home + "\\Alicorn-win32-x64"
