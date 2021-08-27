@@ -47,7 +47,7 @@ def un_zip(f):
 
 if os.access(al_Executable, os.X_OK):
     print("Alicorn Found! Starting...")
-    os.system("cd " + al_Root + " && start /B Alicorn.exe")
+    os.system("cd /d " + al_Root + " && start /B Alicorn.exe")
     sys.exit(0)
 
 else:
